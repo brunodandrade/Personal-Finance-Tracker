@@ -5,7 +5,7 @@ body {
   width: 100vw;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-x: hidden;
   align-items: center;
 }
 
@@ -44,10 +44,13 @@ body {
   padding: 10px;
   border-radius: 7px;
   cursor: pointer;
+  transition: 500ms;
 }
 
 #transactionBtn:active {
   background-color: #343434;
+  transform: scale(0.9);
+  transition: 0ms;
 }
 
 #resumeTotal {
@@ -106,4 +109,109 @@ img {
 .resumeIcon {
   align-items: center;
   display: flex;
+}
+
+#statsDiv {
+  grid-gap: 20px;
+  width: calc(100% - 40px);
+  max-width: 1300px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 20px;
+}
+
+#expenses,
+#quickStats {
+  height: 350px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.title {
+  font-size: 19px;
+  font-weight: 400;
+}
+
+#expensesGraph {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#whenNoGraph {
+  color: #505050;
+  font-weight: 300;
+}
+
+.expenseCalc {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+  font-size: 16px;
+  color: #505050;
+}
+
+#quickStats .title {
+  margin-bottom: 25px;
+}
+
+.result {
+  font-weight: 400;
+}
+
+#largestAverage {
+  color: red;
+}
+
+#incomeAverage {
+  color: green;
+}
+
+#savingsAverage,
+#expenseAverage {
+  color: black;
+}
+
+@media (max-width: 900px) {
+  #statsDiv {
+    grid-template-columns: 1fr;
+  }
+
+  #quickStats {
+    height: max-content;
+  }
+}
+
+#recentTransactions {
+  height: max-content;
+  min-height: 150px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  width: calc(100% - 40px);
+  max-width: 1300px;
+  margin: 20px 0;
+}
+
+#recentTransactionsTop {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+  align-items: center;
+}
+
+#transactions {
+  width: fit-content;
+  font-size: 14px;
+  text-wrap: nowrap;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #000000;
+  padding: 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: 500ms;
 }

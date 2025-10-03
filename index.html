@@ -68,6 +68,46 @@
         </div>
       </div>
     </div>
+    <div id="statsDiv">
+      <div id="expenses">
+        <div class="title">Expenses by Category</div>
+        <div id="expensesGraph">
+          <div id="whenNoGraph">No expense data to display</div>
+        </div>
+      </div>
+      <div id="quickStats">
+        <div class="title">Quick Stats</div>
+        <div class="expenseCalc">
+          <div class="expenseText">Average Expense</div>
+          <div id="expenseAverage" class="result">$0.00</div>
+        </div>
+        <div class="expenseCalc">
+          <div class="expenseText">Largest Expense</div>
+          <div id="largestAverage" class="result">$0.00</div>
+        </div>
+        <div class="expenseCalc">
+          <div class="expenseText">Largest Income</div>
+          <div id="incomeAverage" class="result">$0.00</div>
+        </div>
+        <div class="expenseCalc">
+          <div class="expenseText">Savings Rate</div>
+          <div id="savingsAverage" class="result">0%</div>
+        </div>
+      </div>
+    </div>
+    <div id="recentTransactions">
+      <div id="recentTransactionsTop">
+        <div class="title">Recent Transactions</div>
+        <form id="form">
+          <label for="transactions"></label
+          ><select id="transactions" name="transactions">
+            <option value="transactions">All Transactions</option>
+            <option value="income">Income Only</option>
+            <option value="expenses">Expenses Only</option>
+          </select>
+        </form>
+      </div>
+    </div>
   </body>
   <script type="module" src="scripts/index.js"></script>
 </html>
