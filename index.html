@@ -64,7 +64,7 @@
           <div class="resumeIcon"><img src="icons/dollar.png" alt="" /></div>
         </div>
         <div class="resumeBottom">
-          <div class="resumeValue" id="transitionsResume">0</div>
+          <div class="resumeValue" id="transactionsResume">0</div>
         </div>
       </div>
     </div>
@@ -72,6 +72,8 @@
       <div id="expenses">
         <div class="title">Expenses by Category</div>
         <div id="expensesGraph">
+          <canvas id="myChart" ></canvas>
+
           <div id="whenNoGraph">No expense data to display</div>
         </div>
       </div>
@@ -106,6 +108,55 @@
             <option value="expenses">Expenses Only</option>
           </select>
         </form>
+      </div>
+      <div id="noRecentTransactions">No Recent Transactions</div>
+    </div>
+    <div id="transactionWindow">
+      <div id="container">
+        <div id="head">
+          <div id="headText">Add New Transaction</div>
+          <img id="closeWindow" src="icons/close.png" alt="" />
+        </div>
+        <div id="windowType"  class="windowContainer">
+          <div class="windowTitle">Type</div>
+
+
+          <label for="typeInput"></label
+          ><select class="inputWindow" id="typeInput" name="transactions">
+          <option value="expense">Expense</option>
+          <option value="income">Income</option>
+
+        </select>
+
+        </div>
+        <div id="windowDescription" class="windowContainer">
+          <div class="windowTitle">Description</div>
+          <input type="text" class="inputWindow" id="descriptionInput" placeholder="e.g., Grocery shopping"></input>
+
+        </div>
+        <div id="windowAmount" class="windowContainer">
+          <div id="windowAmountBefore">Required</div>
+          <div class="windowTitle">Amount</div>
+          <input type="number" class="inputWindow" id="amountInput" placeholder="0.00"></input>
+        </div>
+        <div id="windowCategory" class="windowContainer">
+          <div class="windowTitle">Category</div>
+
+          <label for="typeInput"></label>
+        <select class="inputWindow" id="categoryInput" name="transactions">
+          <option value="food">Food</option>
+          <option value="transport">Transport</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="bills">Bills</option>
+          <option value="shopping">Shopping</option>
+          <option value="health">Health</option>
+          <option value="otherExpense">Other</option>
+
+        </select>
+
+        </div>
+        <button id="addTransactionWindowBtn" type="button">Add Transaction</button>
+
       </div>
     </div>
   </body>

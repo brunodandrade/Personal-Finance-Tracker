@@ -136,15 +136,20 @@ img {
 }
 
 #expensesGraph {
-  height: 100%;
+  height: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: max-content;
+  margin: auto;
+  position: relative;
 }
 
 #whenNoGraph {
   color: #505050;
   font-weight: 300;
+  position: absolute;
+  margin: auto;
 }
 
 .expenseCalc {
@@ -188,12 +193,13 @@ img {
 
 #recentTransactions {
   height: max-content;
-  min-height: 150px;
+  min-height: 250px;
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   width: calc(100% - 40px);
   max-width: 1300px;
   margin: 20px 0;
+  position: relative;
 }
 
 #recentTransactionsTop {
@@ -214,4 +220,124 @@ img {
   border-radius: 7px;
   cursor: pointer;
   transition: 500ms;
+}
+
+#noRecentTransactions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 200;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  margin: auto;
+}
+
+#transactionWindow {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: 200ms;
+  transform: scale(0);
+}
+
+#container {
+  background-color: white;
+  width: 500px;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  transform: scale(0);
+  transition: 200ms;
+}
+
+#head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+#closeWindow {
+  width: 20px;
+  height: 20px;
+}
+
+.windowContainer {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.windowTitle {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.inputWindow {
+  background-color: rgba(227, 227, 227, 0.37);
+  height: 40px;
+  border: none;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  color: #797979;
+  border-radius: 12px;
+  width: calc(100% - 20px);
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#categoryInput,
+#typeInput {
+  width: 100%;
+}
+
+#addTransactionWindowBtn {
+  width: 100%;
+  border: none;
+  background-color: black;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+#windowAmount {
+  position: relative;
+}
+
+#windowAmountBefore {
+  content: "Required";
+  width: 100px;
+  height: 30px;
+  background-color: #ff0000;
+  position: absolute;
+  top: 53%;
+  right: 5px;
+  border-radius: 10px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+
+#addTransactionWindowBtn:active {
+  background-color: #343434;
+}
+
+#closeWindow {
+  cursor: pointer;
+}
+
+#myChart {
+  width: 100%;
 }
