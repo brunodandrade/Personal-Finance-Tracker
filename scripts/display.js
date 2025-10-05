@@ -1,6 +1,8 @@
 import { transactionsMath } from "./math";
 import { transactions } from "./transactionPross";
 import { Chart } from "chart.js/auto";
+import trashIconUrl from "url:../icons/trash.png";
+import { all } from "axios";
 
 const addTransactionWindowBtn = document.getElementById(
   "addTransactionWindowBtn",
@@ -15,6 +17,7 @@ const incomeAverage = document.getElementById("incomeAverage");
 const savingsAverage = document.getElementById("savingsAverage");
 const transactionsBottom = document.getElementById("transactions");
 const whenNoGraph = document.getElementById("whenNoGraph");
+const recentContainer = document.getElementById("recentContainer");
 
 const ctx = document.getElementById("myChart").getContext("2d");
 let chartInstance = null;
@@ -73,18 +76,34 @@ function calculateCategoryTotals() {
 }
 
 // 🕓 Sort and display recent transactions
-function recentTransactionsUpdate() {
+export function recentTransactionsUpdate() {
   let allTransactions = [...transactions];
 
   if (transactionsBottom.value === "income") {
     allTransactions = allTransactions.filter((t) => t.type === "income");
-  } else if (transactionsBottom.value === "expense") {
+  } else if (transactionsBottom.value === "expenses") {
     allTransactions = allTransactions.filter((t) => t.type === "expense");
   }
 
   // Sort by timestamp (newest first)
   allTransactions.sort((a, b) => b.timestamp - a.timestamp);
-  console.log("Recent transactions:", allTransactions);
+  recentContainer.innerHTML = "";
+  for (let i = 0; i < allTransactions.length; i++) {
+    recentContainer.innerHTML += `<div class="recent">
+          <div class="recentLeft">
+            <div class="recentDescription">
+            ${allTransactions[i].description.length === 0 ? "" : `<div class="description">${allTransactions[i].description}</div>`}
+              <div class="category">${allTransactions[i].type}</div>
+            </div>
+            <div class="recentDate">${allTransactions[i].date}</div>
+          </div>
+          <div class="recentRight">
+          ${allTransactions[i].type === "expense" ? `<div class="money expense">-$${Number(allTransactions[i].amount).toFixed(2)}</div>` : `<div class="money income">+$${Number(allTransactions[i].amount).toFixed(2)}</div>`}
+            
+            <img class="delete" src="${trashIconUrl}" alt="Delete">
+          </div>
+          </div>`;
+  }
 }
 
 // 📈 Create chart once
@@ -137,17 +156,18 @@ export function updateDisplay() {
   }
 
   // 💰 Update text summaries
-  balanceResume.innerText = `$${allValues.totalSum}`;
+  balanceResume.innerText = `$${allValues.totalSum.toFixed(2)}`;
   balanceResume.style.color =
     allValues.totalSum > 0 ? "green" : allValues.totalSum < 0 ? "red" : "black";
 
-  incomeResume.innerText = `$${allValues.totalIncomeSum}`;
-  expensesResume.innerText = `$${allValues.totalExpenseSum}`;
+  incomeResume.innerText = `$${allValues.totalIncomeSum.toFixed(2)}`;
+  expensesResume.innerText = `$${allValues.totalExpenseSum.toFixed(2)}`;
   transactionsResume.innerText = allValues.totalTransactions;
-  expenseAverage.innerText = `$${allValues.expenseAverage}`;
-  largestAverage.innerText = `$${allValues.largestExpense}`;
-  incomeAverage.innerText = `$${allValues.largestIncome}`;
-  savingsAverage.innerText = `${allValues.savingsRate}%`;
+  expenseAverage.innerText = `$${allValues.expenseAverage.toFixed(2)}`;
+  largestAverage.innerText = `$${allValues.largestExpense.toFixed(2)}`;
+  incomeAverage.innerText = `$${allValues.largestIncome.toFixed(2)}`;
+  savingsAverage.innerText =
+    allValues.savingsRate < 0 ? `0%` : `${allValues.savingsRate.toFixed(2)}%`;
 
   recentTransactionsUpdate();
 }

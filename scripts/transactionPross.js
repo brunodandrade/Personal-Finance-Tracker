@@ -1,5 +1,5 @@
 import { closeWindowFunc } from "./buttons";
-
+import { recentTransactionsUpdate } from "./display";
 const typeInput = document.getElementById("typeInput");
 const descriptionInput = document.getElementById("descriptionInput");
 const amountInput = document.getElementById("amountInput");
@@ -10,6 +10,13 @@ const buildTransaction = document.getElementById("addTransactionWindowBtn");
 function getCurrentTime() {
   return new Date().getTime();
 }
+function getCurrentDate() {
+  const date = new Date();
+  const day = date.getDate();
+  const month = date.toLocaleString("en-US", { month: "short" }); // e.g. "Oct"
+  const year = date.getFullYear();
+  return `${day} ${month}, ${year}`;
+}
 
 export class TransactionCreate {
   constructor(
@@ -18,12 +25,14 @@ export class TransactionCreate {
     amount,
     category,
     timestamp = getCurrentTime(),
+    date = getCurrentDate(),
   ) {
     this.type = type;
     this.description = description;
     this.amount = amount;
     this.category = category;
     this.timestamp = timestamp;
+    this.date = date;
   }
 }
 
@@ -66,5 +75,7 @@ buildTransaction.addEventListener("click", () => {
 
     transactions.push(newTrans);
     closeWindowFunc();
+    console.log(transactions);
+    recentTransactionsUpdate();
   }
 });

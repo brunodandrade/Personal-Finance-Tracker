@@ -1,22 +1,22 @@
 body {
-  font-family: Poppins, sans-serif;
-  margin: 0;
-  min-height: 100vh;
-  width: 100vw;
-  display: flex;
   flex-direction: column;
-  overflow-x: hidden;
   align-items: center;
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Poppins, sans-serif;
+  display: flex;
+  overflow-x: hidden;
 }
 
 #transactionDiv {
-  display: inline-flex;
   justify-content: space-between;
+  align-items: center;
   width: calc(100% - 40px);
   max-width: 1300px;
-  margin: 20px 20px;
   height: max-content;
-  align-items: center;
+  margin: 20px;
+  display: inline-flex;
 }
 
 #titleContainer {
@@ -24,77 +24,77 @@ body {
 }
 
 #title {
+  margin: 10px 0;
   font-size: 24px;
   font-weight: 300;
-  margin: 10px 0;
 }
 
 #subtitle {
-  font-size: 14px;
   color: #505050;
+  font-size: 14px;
 }
 
 #transactionBtn {
-  width: fit-content;
-  font-size: 14px;
   text-wrap: nowrap;
-  border: none;
-  background-color: black;
-  color: white;
-  padding: 10px;
-  border-radius: 7px;
+  color: #fff;
   cursor: pointer;
-  transition: 500ms;
+  background-color: #000;
+  border: none;
+  border-radius: 7px;
+  width: fit-content;
+  padding: 10px;
+  font-size: 14px;
+  transition: all .5s;
 }
 
 #transactionBtn:active {
   background-color: #343434;
-  transform: scale(0.9);
-  transition: 0ms;
+  transition: all;
+  transform: scale(.9);
 }
 
 #resumeTotal {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
   width: calc(100% - 40px);
   max-width: 1300px;
+  display: grid;
 }
 
-@media (max-width: 900px) {
+@media (width <= 900px) {
   #resumeTotal {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 500px) {
+@media (width <= 500px) {
   #resumeTotal {
     grid-template-columns: 1fr;
   }
 }
 
 .resumeContainer {
+  border: 1px solid #00000014;
+  border-radius: 12px;
   width: 100%;
   height: 150px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 12px;
 }
 
 .resumeTop {
-  height: 50%;
-  display: flex;
   justify-content: space-between;
-  padding: 0 15px;
   align-items: center;
+  height: 50%;
+  padding: 0 15px;
   font-size: 20px;
   font-weight: 200;
+  display: flex;
 }
 
 .resumeBottom {
-  height: 50%;
-  display: flex;
   align-items: center;
+  height: 50%;
   padding: 0 15px;
+  display: flex;
 }
 
 .resumeValue {
@@ -113,21 +113,20 @@ img {
 
 #statsDiv {
   grid-gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
   width: calc(100% - 40px);
   max-width: 1300px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
   margin-top: 20px;
+  display: grid;
 }
 
-#expenses,
-#quickStats {
-  height: 350px;
+#expenses, #quickStats {
+  border: 1px solid #00000014;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  display: flex;
   flex-direction: column;
+  height: 350px;
   padding: 20px;
+  display: flex;
 }
 
 .title {
@@ -136,28 +135,28 @@ img {
 }
 
 #expensesGraph {
-  height: 80%;
-  display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   width: max-content;
+  height: 80%;
   margin: auto;
+  display: flex;
   position: relative;
 }
 
 #whenNoGraph {
   color: #505050;
+  margin: auto;
   font-weight: 300;
   position: absolute;
-  margin: auto;
 }
 
 .expenseCalc {
-  display: flex;
+  color: #505050;
   justify-content: space-between;
   margin: 15px 0;
   font-size: 16px;
-  color: #505050;
+  display: flex;
 }
 
 #quickStats .title {
@@ -176,12 +175,11 @@ img {
   color: green;
 }
 
-#savingsAverage,
-#expenseAverage {
-  color: black;
+#savingsAverage, #expenseAverage {
+  color: #000;
 }
 
-@media (max-width: 900px) {
+@media (width <= 900px) {
   #statsDiv {
     grid-template-columns: 1fr;
   }
@@ -192,75 +190,75 @@ img {
 }
 
 #recentTransactions {
-  height: max-content;
-  min-height: 250px;
+  border: 1px solid #00000014;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
   width: calc(100% - 40px);
   max-width: 1300px;
+  height: max-content;
+  min-height: 250px;
   margin: 20px 0;
   position: relative;
 }
 
 #recentTransactionsTop {
-  display: flex;
   justify-content: space-between;
-  margin: 20px;
   align-items: center;
+  margin: 20px;
+  display: flex;
 }
 
 #transactions {
-  width: fit-content;
-  font-size: 14px;
   text-wrap: nowrap;
-  border: none;
-  background-color: rgba(0, 0, 0, 0.08);
-  color: #000000;
-  padding: 10px;
-  border-radius: 7px;
+  color: #000;
   cursor: pointer;
-  transition: 500ms;
+  background-color: #00000014;
+  border: none;
+  border-radius: 7px;
+  width: fit-content;
+  padding: 10px;
+  font-size: 14px;
+  transition: all .5s;
 }
 
 #noRecentTransactions {
-  display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  margin: auto;
   font-weight: 200;
+  display: flex;
   position: absolute;
+  top: 50%;
   left: 50%;
   transform: translateX(-50%);
-  top: 50%;
-  margin: auto;
 }
 
 #transactionWindow {
-  position: absolute;
+  background-color: #0000;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0);
+  transition: all .2s;
   display: none;
-  align-items: center;
-  justify-content: center;
-  transition: 200ms;
+  position: absolute;
   transform: scale(0);
 }
 
 #container {
-  background-color: white;
+  background-color: #fff;
+  border-radius: 12px;
   width: 500px;
   margin: 20px;
   padding: 20px;
-  border-radius: 12px;
+  transition: all .2s;
   transform: scale(0);
-  transition: 200ms;
 }
 
 #head {
-  display: flex;
   justify-content: space-between;
   font-size: 18px;
   font-weight: 600;
+  display: flex;
 }
 
 #closeWindow {
@@ -279,35 +277,34 @@ img {
 }
 
 .inputWindow {
-  background-color: rgba(227, 227, 227, 0.37);
-  height: 40px;
+  color: #797979;
+  cursor: pointer;
+  background-color: #e3e3e35e;
   border: none;
+  border-radius: 12px;
+  align-items: center;
+  width: calc(100% - 20px);
+  height: 40px;
+  margin-top: 10px;
+  padding: 0 10px;
   font-size: 16px;
   display: flex;
-  align-items: center;
-  padding: 0 10px;
-  color: #797979;
-  border-radius: 12px;
-  width: calc(100% - 20px);
-  margin-top: 10px;
-  cursor: pointer;
 }
 
-#categoryInput,
-#typeInput {
+#categoryInput, #typeInput {
   width: 100%;
 }
 
 #addTransactionWindowBtn {
-  width: 100%;
-  border: none;
-  background-color: black;
-  color: white;
-  border-radius: 12px;
+  color: #fff;
   cursor: pointer;
-  font-size: 16px;
-  padding: 10px;
+  background-color: #000;
+  border: none;
+  border-radius: 12px;
+  width: 100%;
   margin-top: 10px;
+  padding: 10px;
+  font-size: 16px;
 }
 
 #windowAmount {
@@ -316,18 +313,18 @@ img {
 
 #windowAmountBefore {
   content: "Required";
+  color: #fff;
+  opacity: 0;
+  background-color: red;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
   width: 100px;
   height: 30px;
-  background-color: #ff0000;
+  display: flex;
   position: absolute;
   top: 53%;
   right: 5px;
-  border-radius: 10px;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
 }
 
 #addTransactionWindowBtn:active {
@@ -343,30 +340,30 @@ img {
 }
 
 #recentContainer {
-  display: flex;
   flex-direction: column;
   align-items: center;
+  display: flex;
 }
 
 .recent {
-  display: flex;
+  border: 1px solid #00000014;
+  border-radius: 12px;
   justify-content: space-between;
   width: calc(100% - 30px);
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 10px 0;
   margin-bottom: 10px;
+  padding: 10px 0;
+  display: flex;
 }
 
 .recentLeft {
-  display: flex;
   flex-direction: column;
   margin-left: 20px;
+  display: flex;
 }
 
 .recentDescription {
-  display: flex;
   align-items: center;
+  display: flex;
 }
 
 .description {
@@ -375,16 +372,16 @@ img {
 
 .category {
   background-color: #eceef2;
-  padding: 3px 10px;
   border-radius: 12px;
+  padding: 3px 10px;
 }
 
 .recentRight {
-  display: flex;
+  justify-content: space-between;
   align-items: center;
   min-width: 70px;
-  justify-content: space-between;
   margin-right: 10px;
+  display: flex;
 }
 
 .recentDate {
@@ -406,3 +403,4 @@ img {
 .income {
   color: green;
 }
+/*# sourceMappingURL=Personal-Finance-Tracker.1303bb05.css.map */
