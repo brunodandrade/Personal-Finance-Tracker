@@ -2,7 +2,6 @@ import { transactionsMath } from "./math.js";
 import { transactions, deleteTransaction } from "./transactionPross.js";
 import { Chart } from "chart.js/auto";
 import trashIconUrl from "url:../icons/trash.png";
-import { all } from "axios";
 
 // 🔹 Cache DOM elements
 const addTransactionWindowBtn = document.getElementById(
@@ -80,7 +79,10 @@ export function recentTransactionsUpdate() {
   let allTransactions = [...transactions];
 
   // 🧠 Show all by default or filter if dropdown set
-  if (!transactionsBottom.value || transactionsBottom.value === "all") {
+  if (
+    !transactionsBottom.value ||
+    transactionsBottom.value === "transactions"
+  ) {
     allTransactions = [...transactions];
   } else if (transactionsBottom.value === "income") {
     allTransactions = allTransactions.filter((t) => t.type === "income");
@@ -188,15 +190,15 @@ export function updateDisplay() {
   largestAverage.innerText = `$${allValues.largestExpense.toFixed(2)}`;
   incomeAverage.innerText = `$${allValues.largestIncome.toFixed(2)}`;
 
-  if (
-    typeof allValues.savingsRate === "number" &&
-    !isNaN(allValues.savingsRate)
-  ) {
-    savingsAverage.innerText = `${allValues.savingsRate.toFixed(2)}%`;
-  } else {
-    savingsAverage.innerText = "0%";
-  }
+  // ✅ Safe savingsRate handling
+  const savings =
+    typeof allValues.savingsRate === "number" && !isNaN(allValues.savingsRate)
+      ? allValues.savingsRate
+      : 0;
 
+  savingsAverage.innerText = `${savings.toFixed(2)}%`;
+
+  // 🧾 Update recent transactions
   recentTransactionsUpdate();
 }
 
@@ -205,10 +207,10 @@ document.addEventListener("DOMContentLoaded", () => {
   transactionsBottom.addEventListener("change", recentTransactionsUpdate);
   addTransactionWindowBtn.addEventListener("click", updateDisplay);
 
-  // ✅ Fix: ensure default filter is "all"
+  // ✅ Default dropdown value
   transactionsBottom.value = "transactions";
 
-  // ✅ Create chart after DOM is ready (fixes dist bug)
+  // ✅ Create chart after DOM ready (fixes dist issue)
   createChart();
 
   // 🔁 Load saved data into UI
