@@ -742,19 +742,31 @@ function openWindowFunc() {
     addTransactionWindow.style.display = "flex";
     addTransactionWindow.style.transform = "scale(1)";
     typeInput.value = "expense";
+    if (typeInput.value === "income") categoryInput.innerHTML = `
+      <option value="salary">Salary</option>
+      <option value="freelance">Freelance</option>
+      <option value="investment">Investment</option>
+      <option value="gift">Gift</option>
+      <option value="otherIncome">Other</option>`;
+    else if (typeInput.value === "expense") categoryInput.innerHTML = `
+      <option value="food">Food</option>
+      <option value="transport">Transport</option>
+      <option value="entertainment">Entertainment</option>
+      <option value="bills">Bills</option>
+      <option value="shopping">Shopping</option>
+      <option value="health">Health</option>
+      <option value="otherExpense">Other</option>`;
     descriptionInput.value = "";
     amountInput.value = "";
-    categoryInput.value = "food";
     setTimeout(()=>{
         addTransactionWindow.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
         containerWindow.style.transform = "scale(1)";
     }, 0);
 }
-closeWindow.addEventListener("click", ()=>{
-    closeWindowFunc();
-});
-transactionBtn.addEventListener("click", ()=>{
-    openWindowFunc();
+// ✅ Attach event listeners *after* DOM is loaded
+document.addEventListener("DOMContentLoaded", ()=>{
+    closeWindow.addEventListener("click", closeWindowFunc);
+    transactionBtn.addEventListener("click", openWindowFunc);
 });
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jnFvT":[function(require,module,exports,__globalThis) {
@@ -792,6 +804,8 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "TransactionCreate", ()=>TransactionCreate);
 parcelHelpers.export(exports, "transactions", ()=>transactions);
+// 🗑️ Delete transaction by timestamp
+parcelHelpers.export(exports, "deleteTransaction", ()=>deleteTransaction);
 var _buttons = require("./buttons");
 var _display = require("./display");
 const typeInput = document.getElementById("typeInput");
@@ -808,7 +822,7 @@ function getCurrentDate() {
     const day = date.getDate();
     const month = date.toLocaleString("en-US", {
         month: "short"
-    }); // e.g. "Oct"
+    });
     const year = date.getFullYear();
     return `${day} ${month}, ${year}`;
 }
@@ -829,7 +843,7 @@ typeInput.addEventListener("change", ()=>{
       <option value="investment">Investment</option>
       <option value="gift">Gift</option>
       <option value="otherIncome">Other</option>`;
-    else categoryInput.innerHTML = `
+    else if (typeInput.value === "expense") categoryInput.innerHTML = `
       <option value="food">Food</option>
       <option value="transport">Transport</option>
       <option value="entertainment">Entertainment</option>
@@ -838,7 +852,8 @@ typeInput.addEventListener("change", ()=>{
       <option value="health">Health</option>
       <option value="otherExpense">Other</option>`;
 });
-let transactions = [];
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+// ➕ Add new transaction
 buildTransaction.addEventListener("click", ()=>{
     if (amountInput.value === "") {
         amountInput.style.border = "2px solid red";
@@ -848,13 +863,25 @@ buildTransaction.addEventListener("click", ()=>{
         windowAmountBefore.style.opacity = "0";
         const newTrans = new TransactionCreate(typeInput.value, descriptionInput.value, amountInput.value, categoryInput.value);
         transactions.push(newTrans);
+        // 💾 Save to localStorage
+        localStorage.setItem("transactions", JSON.stringify(transactions));
         (0, _buttons.closeWindowFunc)();
-        console.log(transactions);
-        (0, _display.recentTransactionsUpdate)();
+        console.log("Added transaction:", newTrans);
+        (0, _display.updateDisplay)();
     }
 });
+function deleteTransaction(timestamp) {
+    const index = transactions.findIndex((t)=>t.timestamp === timestamp);
+    if (index !== -1) {
+        console.log("Deleting transaction with timestamp:", timestamp);
+        transactions.splice(index, 1);
+        // 💾 Save to localStorage
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+        (0, _display.updateDisplay)();
+    }
+}
 
-},{"./buttons":"8wS56","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./display":"77JYK"}],"77JYK":[function(require,module,exports,__globalThis) {
+},{"./buttons":"8wS56","./display":"77JYK","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"77JYK":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 // 🕓 Sort and display recent transactions
@@ -862,7 +889,7 @@ parcelHelpers.export(exports, "recentTransactionsUpdate", ()=>recentTransactions
 // 🧮 Update chart and display
 parcelHelpers.export(exports, "updateDisplay", ()=>updateDisplay);
 var _math = require("./math");
-var _transactionPross = require("./transactionPross");
+var _transactionPross = require("./transactionPross"); // 🗑️ added deleteTransaction import
 var _auto = require("chart.js/auto");
 var _trashPng = require("url:../icons/trash.png");
 var _trashPngDefault = parcelHelpers.interopDefault(_trashPng);
@@ -935,21 +962,25 @@ function recentTransactionsUpdate() {
     else if (transactionsBottom.value === "expenses") allTransactions = allTransactions.filter((t)=>t.type === "expense");
     // Sort by timestamp (newest first)
     allTransactions.sort((a, b)=>b.timestamp - a.timestamp);
+    // Clear and rebuild
     recentContainer.innerHTML = "";
-    for(let i = 0; i < allTransactions.length; i++)recentContainer.innerHTML += `<div class="recent">
-          <div class="recentLeft">
-            <div class="recentDescription">
-            ${allTransactions[i].description.length === 0 ? "" : `<div class="description">${allTransactions[i].description}</div>`}
-              <div class="category">${allTransactions[i].type}</div>
-            </div>
-            <div class="recentDate">${allTransactions[i].date}</div>
+    for(let i = 0; i < allTransactions.length; i++){
+        const t = allTransactions[i];
+        recentContainer.innerHTML += `
+      <div class="recent" data-id="${t.timestamp}">
+        <div class="recentLeft">
+          <div class="recentDescription">
+            ${t.description.length === 0 ? "" : `<div class="description">${t.description}</div>`}
+            <div class="category">${t.type}</div>
           </div>
-          <div class="recentRight">
-          ${allTransactions[i].type === "expense" ? `<div class="money expense">-$${Number(allTransactions[i].amount).toFixed(2)}</div>` : `<div class="money income">+$${Number(allTransactions[i].amount).toFixed(2)}</div>`}
-            
-            <img class="delete" src="${0, _trashPngDefault.default}" alt="Delete">
-          </div>
-          </div>`;
+          <div class="recentDate">${t.date}</div>
+        </div>
+        <div class="recentRight">
+          ${t.type === "expense" ? `<div class="money expense">-$${Number(t.amount).toFixed(2)}</div>` : `<div class="money income">+$${Number(t.amount).toFixed(2)}</div>`}
+          <img class="delete" data-id="${t.timestamp}" src="${0, _trashPngDefault.default}" alt="Delete">
+        </div>
+      </div>`;
+    }
 }
 // 📈 Create chart once
 function createChart() {
@@ -1011,12 +1042,23 @@ function updateDisplay() {
     savingsAverage.innerText = allValues.savingsRate < 0 ? `0%` : `${allValues.savingsRate.toFixed(2)}%`;
     recentTransactionsUpdate();
 }
-// 🎛 Event listeners
-transactionsBottom.addEventListener("change", recentTransactionsUpdate);
-addTransactionWindowBtn.addEventListener("click", updateDisplay);
-createChart();
+// 🎛 Event listeners (run after DOM loads)
+document.addEventListener("DOMContentLoaded", ()=>{
+    transactionsBottom.addEventListener("change", recentTransactionsUpdate);
+    addTransactionWindowBtn.addEventListener("click", updateDisplay);
+    createChart();
+    // 🔁 Show saved transactions on load
+    updateDisplay();
+    // 🗑️ Delete listener
+    recentContainer.addEventListener("click", (e)=>{
+        if (e.target.classList.contains("delete")) {
+            const idToDelete = Number(e.target.dataset.id);
+            (0, _transactionPross.deleteTransaction)(idToDelete);
+        }
+    });
+});
 
-},{"./math":"8A4F6","./transactionPross":"3ZM2K","chart.js/auto":"a3bOj","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","url:../icons/trash.png":"gxJJC","axios":"kooH4"}],"8A4F6":[function(require,module,exports,__globalThis) {
+},{"./math":"8A4F6","./transactionPross":"3ZM2K","chart.js/auto":"a3bOj","url:../icons/trash.png":"gxJJC","axios":"kooH4","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"8A4F6":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "transactionsMath", ()=>transactionsMath);

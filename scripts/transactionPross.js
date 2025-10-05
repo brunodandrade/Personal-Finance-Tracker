@@ -1,5 +1,6 @@
 import { closeWindowFunc } from "./buttons";
-import { recentTransactionsUpdate } from "./display";
+import { recentTransactionsUpdate, updateDisplay } from "./display";
+
 const typeInput = document.getElementById("typeInput");
 const descriptionInput = document.getElementById("descriptionInput");
 const amountInput = document.getElementById("amountInput");
@@ -13,7 +14,7 @@ function getCurrentTime() {
 function getCurrentDate() {
   const date = new Date();
   const day = date.getDate();
-  const month = date.toLocaleString("en-US", { month: "short" }); // e.g. "Oct"
+  const month = date.toLocaleString("en-US", { month: "short" });
   const year = date.getFullYear();
   return `${day} ${month}, ${year}`;
 }
@@ -44,7 +45,7 @@ typeInput.addEventListener("change", () => {
       <option value="investment">Investment</option>
       <option value="gift">Gift</option>
       <option value="otherIncome">Other</option>`;
-  } else {
+  } else if (typeInput.value === "expense") {
     categoryInput.innerHTML = `
       <option value="food">Food</option>
       <option value="transport">Transport</option>
@@ -56,8 +57,11 @@ typeInput.addEventListener("change", () => {
   }
 });
 
-export let transactions = [];
+// 💾 Load saved transactions
+export let transactions =
+  JSON.parse(localStorage.getItem("transactions")) || [];
 
+// ➕ Add new transaction
 buildTransaction.addEventListener("click", () => {
   if (amountInput.value === "") {
     amountInput.style.border = "2px solid red";
@@ -74,8 +78,26 @@ buildTransaction.addEventListener("click", () => {
     );
 
     transactions.push(newTrans);
+
+    // 💾 Save to localStorage
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+
     closeWindowFunc();
-    console.log(transactions);
-    recentTransactionsUpdate();
+    console.log("Added transaction:", newTrans);
+    updateDisplay();
   }
 });
+
+// 🗑️ Delete transaction by timestamp
+export function deleteTransaction(timestamp) {
+  const index = transactions.findIndex((t) => t.timestamp === timestamp);
+  if (index !== -1) {
+    console.log("Deleting transaction with timestamp:", timestamp);
+    transactions.splice(index, 1);
+
+    // 💾 Save to localStorage
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+
+    updateDisplay();
+  }
+}

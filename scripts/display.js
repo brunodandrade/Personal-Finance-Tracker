@@ -1,5 +1,5 @@
 import { transactionsMath } from "./math";
-import { transactions } from "./transactionPross";
+import { transactions, deleteTransaction } from "./transactionPross"; // 🗑️ added deleteTransaction import
 import { Chart } from "chart.js/auto";
 import trashIconUrl from "url:../icons/trash.png";
 import { all } from "axios";
@@ -87,22 +87,29 @@ export function recentTransactionsUpdate() {
 
   // Sort by timestamp (newest first)
   allTransactions.sort((a, b) => b.timestamp - a.timestamp);
+
+  // Clear and rebuild
   recentContainer.innerHTML = "";
   for (let i = 0; i < allTransactions.length; i++) {
-    recentContainer.innerHTML += `<div class="recent">
-          <div class="recentLeft">
-            <div class="recentDescription">
-            ${allTransactions[i].description.length === 0 ? "" : `<div class="description">${allTransactions[i].description}</div>`}
-              <div class="category">${allTransactions[i].type}</div>
-            </div>
-            <div class="recentDate">${allTransactions[i].date}</div>
+    const t = allTransactions[i];
+    recentContainer.innerHTML += `
+      <div class="recent" data-id="${t.timestamp}">
+        <div class="recentLeft">
+          <div class="recentDescription">
+            ${t.description.length === 0 ? "" : `<div class="description">${t.description}</div>`}
+            <div class="category">${t.type}</div>
           </div>
-          <div class="recentRight">
-          ${allTransactions[i].type === "expense" ? `<div class="money expense">-$${Number(allTransactions[i].amount).toFixed(2)}</div>` : `<div class="money income">+$${Number(allTransactions[i].amount).toFixed(2)}</div>`}
-            
-            <img class="delete" src="${trashIconUrl}" alt="Delete">
-          </div>
-          </div>`;
+          <div class="recentDate">${t.date}</div>
+        </div>
+        <div class="recentRight">
+          ${
+            t.type === "expense"
+              ? `<div class="money expense">-$${Number(t.amount).toFixed(2)}</div>`
+              : `<div class="money income">+$${Number(t.amount).toFixed(2)}</div>`
+          }
+          <img class="delete" data-id="${t.timestamp}" src="${trashIconUrl}" alt="Delete">
+        </div>
+      </div>`;
   }
 }
 
@@ -172,7 +179,20 @@ export function updateDisplay() {
   recentTransactionsUpdate();
 }
 
-// 🎛 Event listeners
-transactionsBottom.addEventListener("change", recentTransactionsUpdate);
-addTransactionWindowBtn.addEventListener("click", updateDisplay);
-createChart();
+// 🎛 Event listeners (run after DOM loads)
+document.addEventListener("DOMContentLoaded", () => {
+  transactionsBottom.addEventListener("change", recentTransactionsUpdate);
+  addTransactionWindowBtn.addEventListener("click", updateDisplay);
+  createChart();
+
+  // 🔁 Show saved transactions on load
+  updateDisplay();
+
+  // 🗑️ Delete listener
+  recentContainer.addEventListener("click", (e) => {
+    if (e.target.classList.contains("delete")) {
+      const idToDelete = Number(e.target.dataset.id);
+      deleteTransaction(idToDelete);
+    }
+  });
+});
