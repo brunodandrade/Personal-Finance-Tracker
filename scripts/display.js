@@ -1,9 +1,10 @@
-import { transactionsMath } from "./math";
-import { transactions, deleteTransaction } from "./transactionPross"; // 🗑️ added deleteTransaction import
+import { transactionsMath } from "./math.js";
+import { transactions, deleteTransaction } from "./transactionPross.js";
 import { Chart } from "chart.js/auto";
 import trashIconUrl from "url:../icons/trash.png";
 import { all } from "axios";
 
+// 🔹 Cache DOM elements
 const addTransactionWindowBtn = document.getElementById(
   "addTransactionWindowBtn",
 );
@@ -19,10 +20,9 @@ const transactionsBottom = document.getElementById("transactions");
 const whenNoGraph = document.getElementById("whenNoGraph");
 const recentContainer = document.getElementById("recentContainer");
 
-const ctx = document.getElementById("myChart").getContext("2d");
 let chartInstance = null;
 
-// 📊 Category labels (base order)
+// 📊 Category labels
 const categories = [
   "Food",
   "Transport",
@@ -79,7 +79,10 @@ function calculateCategoryTotals() {
 export function recentTransactionsUpdate() {
   let allTransactions = [...transactions];
 
-  if (transactionsBottom.value === "income") {
+  // 🧠 Show all by default or filter if dropdown set
+  if (!transactionsBottom.value || transactionsBottom.value === "all") {
+    allTransactions = [...transactions];
+  } else if (transactionsBottom.value === "income") {
     allTransactions = allTransactions.filter((t) => t.type === "income");
   } else if (transactionsBottom.value === "expenses") {
     allTransactions = allTransactions.filter((t) => t.type === "expense");
@@ -90,6 +93,7 @@ export function recentTransactionsUpdate() {
 
   // Clear and rebuild
   recentContainer.innerHTML = "";
+
   for (let i = 0; i < allTransactions.length; i++) {
     const t = allTransactions[i];
     recentContainer.innerHTML += `
@@ -111,10 +115,22 @@ export function recentTransactionsUpdate() {
         </div>
       </div>`;
   }
+
+  if (allTransactions.length === 0) {
+    recentContainer.innerHTML = `<p class="noTransactions">No transactions yet.</p>`;
+  }
 }
 
-// 📈 Create chart once
+// 📈 Create chart safely after DOM loads
 function createChart() {
+  const chartCanvas = document.getElementById("myChart");
+  if (!chartCanvas) {
+    console.warn("⚠️ Chart canvas not found");
+    return;
+  }
+
+  const ctx = chartCanvas.getContext("2d");
+
   chartInstance = new Chart(ctx, {
     type: "pie",
     data: {
@@ -148,7 +164,6 @@ export function updateDisplay() {
   const allValues = transactionsMath();
   const totals = calculateCategoryTotals();
 
-  // 🧩 Filter out categories where total = 0
   const filtered = Object.entries(totals)
     .filter(([_, value]) => value > 0)
     .map(([label, value]) => ({ label, value }));
@@ -158,11 +173,10 @@ export function updateDisplay() {
     chartInstance.data.labels = filtered.map((i) => i.label);
     chartInstance.data.datasets[0].data = filtered.map((i) => i.value);
     chartInstance.update();
-
     whenNoGraph.style.display = filtered.length > 0 ? "none" : "block";
   }
 
-  // 💰 Update text summaries
+  // 💰 Update text summaries safely
   balanceResume.innerText = `$${allValues.totalSum.toFixed(2)}`;
   balanceResume.style.color =
     allValues.totalSum > 0 ? "green" : allValues.totalSum < 0 ? "red" : "black";
@@ -173,19 +187,31 @@ export function updateDisplay() {
   expenseAverage.innerText = `$${allValues.expenseAverage.toFixed(2)}`;
   largestAverage.innerText = `$${allValues.largestExpense.toFixed(2)}`;
   incomeAverage.innerText = `$${allValues.largestIncome.toFixed(2)}`;
-  savingsAverage.innerText =
-    allValues.savingsRate < 0 ? `0%` : `${allValues.savingsRate.toFixed(2)}%`;
+
+  if (
+    typeof allValues.savingsRate === "number" &&
+    !isNaN(allValues.savingsRate)
+  ) {
+    savingsAverage.innerText = `${allValues.savingsRate.toFixed(2)}%`;
+  } else {
+    savingsAverage.innerText = "0%";
+  }
 
   recentTransactionsUpdate();
 }
 
-// 🎛 Event listeners (run after DOM loads)
+// 🎛 Initialize after DOM loads
 document.addEventListener("DOMContentLoaded", () => {
   transactionsBottom.addEventListener("change", recentTransactionsUpdate);
   addTransactionWindowBtn.addEventListener("click", updateDisplay);
+
+  // ✅ Fix: ensure default filter is "all"
+  transactionsBottom.value = "transactions";
+
+  // ✅ Create chart after DOM is ready (fixes dist bug)
   createChart();
 
-  // 🔁 Show saved transactions on load
+  // 🔁 Load saved data into UI
   updateDisplay();
 
   // 🗑️ Delete listener

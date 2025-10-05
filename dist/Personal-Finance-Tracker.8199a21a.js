@@ -836,6 +836,7 @@ class TransactionCreate {
         this.date = date;
     }
 }
+// 🧠 Change category list when type changes
 typeInput.addEventListener("change", ()=>{
     if (typeInput.value === "income") categoryInput.innerHTML = `
       <option value="salary">Salary</option>
@@ -852,34 +853,51 @@ typeInput.addEventListener("change", ()=>{
       <option value="health">Health</option>
       <option value="otherExpense">Other</option>`;
 });
-let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+let transactions = [];
+try {
+    const saved = localStorage.getItem("transactions");
+    transactions = saved ? JSON.parse(saved) : [];
+} catch (e) {
+    console.error("\u26A0\uFE0F Error loading transactions from localStorage:", e);
+    transactions = [];
+}
 // ➕ Add new transaction
 buildTransaction.addEventListener("click", ()=>{
     if (amountInput.value === "") {
         amountInput.style.border = "2px solid red";
         windowAmountBefore.style.opacity = "0.7";
-    } else {
-        amountInput.style.border = "none";
-        windowAmountBefore.style.opacity = "0";
-        const newTrans = new TransactionCreate(typeInput.value, descriptionInput.value, amountInput.value, categoryInput.value);
-        transactions.push(newTrans);
-        // 💾 Save to localStorage
-        localStorage.setItem("transactions", JSON.stringify(transactions));
-        (0, _buttons.closeWindowFunc)();
-        console.log("Added transaction:", newTrans);
-        (0, _display.updateDisplay)();
+        return;
     }
+    amountInput.style.border = "none";
+    windowAmountBefore.style.opacity = "0";
+    const newTrans = new TransactionCreate(typeInput.value, descriptionInput.value, amountInput.value, categoryInput.value);
+    transactions.push(newTrans);
+    // 💾 Save to localStorage
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+    (0, _buttons.closeWindowFunc)();
+    console.log("\u2705 Added transaction:", newTrans);
+    // 🧩 Update all visuals (balances, chart, list)
+    (0, _display.updateDisplay)();
 });
 function deleteTransaction(timestamp) {
     const index = transactions.findIndex((t)=>t.timestamp === timestamp);
     if (index !== -1) {
-        console.log("Deleting transaction with timestamp:", timestamp);
+        console.log("\uD83D\uDDD1\uFE0F Deleting transaction with timestamp:", timestamp);
         transactions.splice(index, 1);
         // 💾 Save to localStorage
         localStorage.setItem("transactions", JSON.stringify(transactions));
+        // 🔄 Update display fully
         (0, _display.updateDisplay)();
     }
 }
+// 🧩 Show saved transactions on first page load
+document.addEventListener("DOMContentLoaded", ()=>{
+    if (transactions.length > 0) {
+        console.log(`\u{1F501} Loaded ${transactions.length} transactions from storage`);
+        (0, _display.updateDisplay)();
+        (0, _display.recentTransactionsUpdate)();
+    }
+});
 
 },{"./buttons":"8wS56","./display":"77JYK","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"77JYK":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -888,12 +906,13 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "recentTransactionsUpdate", ()=>recentTransactionsUpdate);
 // 🧮 Update chart and display
 parcelHelpers.export(exports, "updateDisplay", ()=>updateDisplay);
-var _math = require("./math");
-var _transactionPross = require("./transactionPross"); // 🗑️ added deleteTransaction import
+var _mathJs = require("./math.js");
+var _transactionProssJs = require("./transactionPross.js");
 var _auto = require("chart.js/auto");
 var _trashPng = require("url:../icons/trash.png");
 var _trashPngDefault = parcelHelpers.interopDefault(_trashPng);
 var _axios = require("axios");
+// 🔹 Cache DOM elements
 const addTransactionWindowBtn = document.getElementById("addTransactionWindowBtn");
 const balanceResume = document.getElementById("balanceResume");
 const incomeResume = document.getElementById("incomeResume");
@@ -906,9 +925,8 @@ const savingsAverage = document.getElementById("savingsAverage");
 const transactionsBottom = document.getElementById("transactions");
 const whenNoGraph = document.getElementById("whenNoGraph");
 const recentContainer = document.getElementById("recentContainer");
-const ctx = document.getElementById("myChart").getContext("2d");
 let chartInstance = null;
-// 📊 Category labels (base order)
+// 📊 Category labels
 const categories = [
     "Food",
     "Transport",
@@ -929,7 +947,7 @@ function calculateCategoryTotals() {
         Health: 0,
         Other: 0
     };
-    for (const t of (0, _transactionPross.transactions))if (t.type === "expense") switch(t.category){
+    for (const t of (0, _transactionProssJs.transactions))if (t.type === "expense") switch(t.category){
         case "food":
             totals.Food += Number(t.amount);
             break;
@@ -956,9 +974,13 @@ function calculateCategoryTotals() {
 }
 function recentTransactionsUpdate() {
     let allTransactions = [
-        ...(0, _transactionPross.transactions)
+        ...(0, _transactionProssJs.transactions)
     ];
-    if (transactionsBottom.value === "income") allTransactions = allTransactions.filter((t)=>t.type === "income");
+    // 🧠 Show all by default or filter if dropdown set
+    if (!transactionsBottom.value || transactionsBottom.value === "all") allTransactions = [
+        ...(0, _transactionProssJs.transactions)
+    ];
+    else if (transactionsBottom.value === "income") allTransactions = allTransactions.filter((t)=>t.type === "income");
     else if (transactionsBottom.value === "expenses") allTransactions = allTransactions.filter((t)=>t.type === "expense");
     // Sort by timestamp (newest first)
     allTransactions.sort((a, b)=>b.timestamp - a.timestamp);
@@ -981,9 +1003,16 @@ function recentTransactionsUpdate() {
         </div>
       </div>`;
     }
+    if (allTransactions.length === 0) recentContainer.innerHTML = `<p class="noTransactions">No transactions yet.</p>`;
 }
-// 📈 Create chart once
+// 📈 Create chart safely after DOM loads
 function createChart() {
+    const chartCanvas = document.getElementById("myChart");
+    if (!chartCanvas) {
+        console.warn("\u26A0\uFE0F Chart canvas not found");
+        return;
+    }
+    const ctx = chartCanvas.getContext("2d");
     chartInstance = new (0, _auto.Chart)(ctx, {
         type: "pie",
         data: {
@@ -1016,9 +1045,8 @@ function createChart() {
     });
 }
 function updateDisplay() {
-    const allValues = (0, _math.transactionsMath)();
+    const allValues = (0, _mathJs.transactionsMath)();
     const totals = calculateCategoryTotals();
-    // 🧩 Filter out categories where total = 0
     const filtered = Object.entries(totals).filter(([_, value])=>value > 0).map(([label, value])=>({
             label,
             value
@@ -1030,7 +1058,7 @@ function updateDisplay() {
         chartInstance.update();
         whenNoGraph.style.display = filtered.length > 0 ? "none" : "block";
     }
-    // 💰 Update text summaries
+    // 💰 Update text summaries safely
     balanceResume.innerText = `$${allValues.totalSum.toFixed(2)}`;
     balanceResume.style.color = allValues.totalSum > 0 ? "green" : allValues.totalSum < 0 ? "red" : "black";
     incomeResume.innerText = `$${allValues.totalIncomeSum.toFixed(2)}`;
@@ -1039,26 +1067,30 @@ function updateDisplay() {
     expenseAverage.innerText = `$${allValues.expenseAverage.toFixed(2)}`;
     largestAverage.innerText = `$${allValues.largestExpense.toFixed(2)}`;
     incomeAverage.innerText = `$${allValues.largestIncome.toFixed(2)}`;
-    savingsAverage.innerText = allValues.savingsRate < 0 ? `0%` : `${allValues.savingsRate.toFixed(2)}%`;
+    if (typeof allValues.savingsRate === "number" && !isNaN(allValues.savingsRate)) savingsAverage.innerText = `${allValues.savingsRate.toFixed(2)}%`;
+    else savingsAverage.innerText = "0%";
     recentTransactionsUpdate();
 }
-// 🎛 Event listeners (run after DOM loads)
+// 🎛 Initialize after DOM loads
 document.addEventListener("DOMContentLoaded", ()=>{
     transactionsBottom.addEventListener("change", recentTransactionsUpdate);
     addTransactionWindowBtn.addEventListener("click", updateDisplay);
+    // ✅ Fix: ensure default filter is "all"
+    transactionsBottom.value = "transactions";
+    // ✅ Create chart after DOM is ready (fixes dist bug)
     createChart();
-    // 🔁 Show saved transactions on load
+    // 🔁 Load saved data into UI
     updateDisplay();
     // 🗑️ Delete listener
     recentContainer.addEventListener("click", (e)=>{
         if (e.target.classList.contains("delete")) {
             const idToDelete = Number(e.target.dataset.id);
-            (0, _transactionPross.deleteTransaction)(idToDelete);
+            (0, _transactionProssJs.deleteTransaction)(idToDelete);
         }
     });
 });
 
-},{"./math":"8A4F6","./transactionPross":"3ZM2K","chart.js/auto":"a3bOj","url:../icons/trash.png":"gxJJC","axios":"kooH4","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"8A4F6":[function(require,module,exports,__globalThis) {
+},{"./math.js":"8A4F6","./transactionPross.js":"3ZM2K","chart.js/auto":"a3bOj","url:../icons/trash.png":"gxJJC","axios":"kooH4","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"8A4F6":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "transactionsMath", ()=>transactionsMath);

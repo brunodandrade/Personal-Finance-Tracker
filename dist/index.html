@@ -1,147 +1,158 @@
-<!DOCTYPE html><html lang=en><script type=importmap>{"imports":{"ffhuf":"/trash.4cce87db.png"}}</script><meta charset=UTF-8><meta name=viewport content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>Document</title><link rel=stylesheet href=/Personal-Finance-Tracker.0e3b849d.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel=stylesheet><body>
-    <div id=transactionDiv>
-      <div id=titleContainer>
-        <div id=title>Personal Finance Tracker</div>
-        <div id=subtitle>Track your income and expenses</div>
+<!DOCTYPE html><html lang="en"><head><script type="importmap">{"imports":{"i5Awr":"/trash.707231b7.png"}}</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/Personal-Finance-Tracker.1303bb05.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="transactionDiv">
+      <div id="titleContainer">
+        <div id="title">Personal Finance Tracker</div>
+        <div id="subtitle">Track your income and expenses</div>
       </div>
-      <div id=buttonContainer>
-        <button id=transactionBtn>+ Add Transaction</button>
-      </div>
-    </div>
-    <div id=resumeTotal>
-      <div class=resumeContainer>
-        <div class=resumeTop>
-          <div class=resumeTitle>Balance</div>
-          <div class=resumeIcon><img src=/wallet.430daf84.png alt></div>
-        </div>
-        <div class=resumeBottom>
-          <div class=resumeValue id=balanceResume>$0.00</div>
-        </div>
-      </div>
-      <div class=resumeContainer>
-        <div class=resumeTop>
-          <div class=resumeTitle>Total Income</div>
-          <div class=resumeIcon>
-            <img src=/trendingUp.217fcd8b.png alt>
-          </div>
-        </div>
-        <div class=resumeBottom>
-          <div class=resumeValue id=incomeResume>$0.00</div>
-        </div>
-      </div>
-      <div class=resumeContainer>
-        <div class=resumeTop>
-          <div class=resumeTitle>Total Expenses</div>
-          <div class=resumeIcon>
-            <img src=/trendingDown.f702179c.png alt>
-          </div>
-        </div>
-        <div class=resumeBottom>
-          <div class=resumeValue id=expensesResume>$0.00</div>
-        </div>
-      </div>
-      <div class=resumeContainer>
-        <div class=resumeTop>
-          <div class=resumeTitle>Transactions</div>
-          <div class=resumeIcon><img src=/dollar.4896741f.png alt></div>
-        </div>
-        <div class=resumeBottom>
-          <div class=resumeValue id=transactionsResume>0</div>
-        </div>
+      <div id="buttonContainer">
+        <button id="transactionBtn">+ Add Transaction</button>
       </div>
     </div>
-    <div id=statsDiv>
-      <div id=expenses>
-        <div class=title>Expenses by Category</div>
-        <div id=expensesGraph>
-          <canvas id=myChart></canvas>
+    <div id="resumeTotal">
+      <div class="resumeContainer">
+        <div class="resumeTop">
+          <div class="resumeTitle">Balance</div>
+          <div class="resumeIcon"><img src="/wallet.65f3e603.png" alt=""></div>
+        </div>
+        <div class="resumeBottom">
+          <div class="resumeValue" id="balanceResume">$0.00</div>
+        </div>
+      </div>
+      <div class="resumeContainer">
+        <div class="resumeTop">
+          <div class="resumeTitle">Total Income</div>
+          <div class="resumeIcon">
+            <img src="/trendingUp.990779a5.png" alt="">
+          </div>
+        </div>
+        <div class="resumeBottom">
+          <div class="resumeValue" id="incomeResume">$0.00</div>
+        </div>
+      </div>
+      <div class="resumeContainer">
+        <div class="resumeTop">
+          <div class="resumeTitle">Total Expenses</div>
+          <div class="resumeIcon">
+            <img src="/trendingDown.f05d3ed8.png" alt="">
+          </div>
+        </div>
+        <div class="resumeBottom">
+          <div class="resumeValue" id="expensesResume">$0.00</div>
+        </div>
+      </div>
+      <div class="resumeContainer">
+        <div class="resumeTop">
+          <div class="resumeTitle">Transactions</div>
+          <div class="resumeIcon"><img src="/dollar.7ba1d925.png" alt=""></div>
+        </div>
+        <div class="resumeBottom">
+          <div class="resumeValue" id="transactionsResume">0</div>
+        </div>
+      </div>
+    </div>
+    <div id="statsDiv">
+      <div id="expenses">
+        <div class="title">Expenses by Category</div>
+        <div id="expensesGraph">
+          <canvas id="myChart"></canvas>
 
-          <div id=whenNoGraph>No expense data to display</div>
+          <div id="whenNoGraph">No expense data to display</div>
         </div>
       </div>
-      <div id=quickStats>
-        <div class=title>Quick Stats</div>
-        <div class=expenseCalc>
-          <div class=expenseText>Average Expense</div>
-          <div id=expenseAverage class=result>$0.00</div>
+      <div id="quickStats">
+        <div class="title">Quick Stats</div>
+        <div class="expenseCalc">
+          <div class="expenseText">Average Expense</div>
+          <div id="expenseAverage" class="result">$0.00</div>
         </div>
-        <div class=expenseCalc>
-          <div class=expenseText>Largest Expense</div>
-          <div id=largestAverage class=result>$0.00</div>
+        <div class="expenseCalc">
+          <div class="expenseText">Largest Expense</div>
+          <div id="largestAverage" class="result">$0.00</div>
         </div>
-        <div class=expenseCalc>
-          <div class=expenseText>Largest Income</div>
-          <div id=incomeAverage class=result>$0.00</div>
+        <div class="expenseCalc">
+          <div class="expenseText">Largest Income</div>
+          <div id="incomeAverage" class="result">$0.00</div>
         </div>
-        <div class=expenseCalc>
-          <div class=expenseText>Savings Rate</div>
-          <div id=savingsAverage class=result>0%</div>
+        <div class="expenseCalc">
+          <div class="expenseText">Savings Rate</div>
+          <div id="savingsAverage" class="result">0%</div>
         </div>
       </div>
     </div>
-    <div id=recentTransactions>
-      <div id=recentTransactionsTop>
-        <div class=title>Recent Transactions</div>
-        <form id=form>
-          <label for=transactions></label><select id=transactions name=transactions>
-            <option value=transactions>All Transactions</option>
-            <option value=income>Income Only</option>
-            <option value=expenses>Expenses Only</option>
+    <div id="recentTransactions">
+      <div id="recentTransactionsTop">
+        <div class="title">Recent Transactions</div>
+        <form id="form">
+          <label for="transactions"></label><select id="transactions" name="transactions">
+            <option value="transactions">All Transactions</option>
+            <option value="income">Income Only</option>
+            <option value="expenses">Expenses Only</option>
           </select>
         </form>
       </div>
-      <div id=recentContainer>
+      <div id="recentContainer">
 
       </div>
-      
+      <!--<div id="noRecentTransactions">No Recent Transactions</div>-->
     </div>
-    <div id=transactionWindow>
-      <div id=container>
-        <div id=head>
-          <div id=headText>Add New Transaction</div>
-          <img id=closeWindow src=/close.962844bc.png alt>
+    <div id="transactionWindow">
+      <div id="container">
+        <div id="head">
+          <div id="headText">Add New Transaction</div>
+          <img id="closeWindow" src="/close.9938eb9a.png" alt="">
         </div>
-        <div id=windowType class=windowContainer>
-          <div class=windowTitle>Type</div>
+        <div id="windowType" class="windowContainer">
+          <div class="windowTitle">Type</div>
 
 
-          <label for=typeInput></label><select class=inputWindow id=typeInput name=transactions>
-          <option value=expense>Expense</option>
-          <option value=income>Income</option>
+          <label for="typeInput"></label><select class="inputWindow" id="typeInput" name="transactions">
+          <option value="expense">Expense</option>
+          <option value="income">Income</option>
 
         </select>
 
         </div>
-        <div id=windowDescription class=windowContainer>
-          <div class=windowTitle>Description</div>
-          <input class=inputWindow id=descriptionInput placeholder="e.g., Grocery shopping">
+        <div id="windowDescription" class="windowContainer">
+          <div class="windowTitle">Description</div>
+          <input type="text" class="inputWindow" id="descriptionInput" placeholder="e.g., Grocery shopping">
 
         </div>
-        <div id=windowAmount class=windowContainer>
-          <div id=windowAmountBefore>Required</div>
-          <div class=windowTitle>Amount</div>
-          <input type=number class=inputWindow id=amountInput placeholder=0.00>
+        <div id="windowAmount" class="windowContainer">
+          <div id="windowAmountBefore">Required</div>
+          <div class="windowTitle">Amount</div>
+          <input type="number" class="inputWindow" id="amountInput" placeholder="0.00">
         </div>
-        <div id=windowCategory class=windowContainer>
-          <div class=windowTitle>Category</div>
+        <div id="windowCategory" class="windowContainer">
+          <div class="windowTitle">Category</div>
 
-          <label for=typeInput></label>
-        <select class=inputWindow id=categoryInput name=transactions>
-          <option value=food>Food</option>
-          <option value=transport>Transport</option>
-          <option value=entertainment>Entertainment</option>
-          <option value=bills>Bills</option>
-          <option value=shopping>Shopping</option>
-          <option value=health>Health</option>
-          <option value=otherExpense>Other</option>
+          <label for="typeInput"></label>
+        <select class="inputWindow" id="categoryInput" name="transactions">
+          <option value="food">Food</option>
+          <option value="transport">Transport</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="bills">Bills</option>
+          <option value="shopping">Shopping</option>
+          <option value="health">Health</option>
+          <option value="otherExpense">Other</option>
 
         </select>
 
         </div>
-        <button id=addTransactionWindowBtn type=button>Add Transaction</button>
+        <button id="addTransactionWindowBtn" type="button">Add Transaction</button>
 
       </div>
     </div>
   
-  <script type=module src=/Personal-Finance-Tracker.8d3f497b.js></script>
+  <script type="module" src="/Personal-Finance-Tracker.8199a21a.js"></script>
 
+</body></html>

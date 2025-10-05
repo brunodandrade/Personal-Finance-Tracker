@@ -11,6 +11,7 @@ const buildTransaction = document.getElementById("addTransactionWindowBtn");
 function getCurrentTime() {
   return new Date().getTime();
 }
+
 function getCurrentDate() {
   const date = new Date();
   const day = date.getDate();
@@ -37,6 +38,7 @@ export class TransactionCreate {
   }
 }
 
+// 🧠 Change category list when type changes
 typeInput.addEventListener("change", () => {
   if (typeInput.value === "income") {
     categoryInput.innerHTML = `
@@ -57,47 +59,66 @@ typeInput.addEventListener("change", () => {
   }
 });
 
-// 💾 Load saved transactions
-export let transactions =
-  JSON.parse(localStorage.getItem("transactions")) || [];
+// 💾 Load saved transactions safely
+export let transactions = [];
+try {
+  const saved = localStorage.getItem("transactions");
+  transactions = saved ? JSON.parse(saved) : [];
+} catch (e) {
+  console.error("⚠️ Error loading transactions from localStorage:", e);
+  transactions = [];
+}
 
 // ➕ Add new transaction
 buildTransaction.addEventListener("click", () => {
   if (amountInput.value === "") {
     amountInput.style.border = "2px solid red";
     windowAmountBefore.style.opacity = "0.7";
-  } else {
-    amountInput.style.border = "none";
-    windowAmountBefore.style.opacity = "0";
-
-    const newTrans = new TransactionCreate(
-      typeInput.value,
-      descriptionInput.value,
-      amountInput.value,
-      categoryInput.value,
-    );
-
-    transactions.push(newTrans);
-
-    // 💾 Save to localStorage
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-
-    closeWindowFunc();
-    console.log("Added transaction:", newTrans);
-    updateDisplay();
+    return;
   }
+
+  amountInput.style.border = "none";
+  windowAmountBefore.style.opacity = "0";
+
+  const newTrans = new TransactionCreate(
+    typeInput.value,
+    descriptionInput.value,
+    amountInput.value,
+    categoryInput.value,
+  );
+
+  transactions.push(newTrans);
+
+  // 💾 Save to localStorage
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+
+  closeWindowFunc();
+  console.log("✅ Added transaction:", newTrans);
+
+  // 🧩 Update all visuals (balances, chart, list)
+  updateDisplay();
 });
 
 // 🗑️ Delete transaction by timestamp
 export function deleteTransaction(timestamp) {
   const index = transactions.findIndex((t) => t.timestamp === timestamp);
   if (index !== -1) {
-    console.log("Deleting transaction with timestamp:", timestamp);
+    console.log("🗑️ Deleting transaction with timestamp:", timestamp);
     transactions.splice(index, 1);
 
     // 💾 Save to localStorage
     localStorage.setItem("transactions", JSON.stringify(transactions));
 
+    // 🔄 Update display fully
     updateDisplay();
   }
 }
+
+// 🧩 Show saved transactions on first page load
+document.addEventListener("DOMContentLoaded", () => {
+  if (transactions.length > 0) {
+    console.log(`🔁 Loaded ${transactions.length} transactions from storage`);
+    updateDisplay();
+    recentTransactionsUpdate();
+  }
+});
