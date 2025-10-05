@@ -1112,7 +1112,7 @@ function transactionsMath() {
     const totalSum = total.reduce((a, b)=>a + b, 0);
     const totalIncomeSum = totalIncome.reduce((a, b)=>a + b, 0);
     const totalExpenseSum = totalExpenses.reduce((a, b)=>a + b, 0);
-    const savingsRate = totalIncomeSum > 0 ? ((totalIncomeSum - totalExpenseSum) / totalIncomeSum * 100).toFixed(2) : 0;
+    const savingsRate = totalIncomeSum > 0 ? (totalIncomeSum - totalExpenseSum) / totalIncomeSum * 100 : 0;
     return {
         total,
         totalIncome,

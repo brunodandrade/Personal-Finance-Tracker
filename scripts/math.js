@@ -30,7 +30,7 @@ export function transactionsMath() {
 
   const savingsRate =
     totalIncomeSum > 0
-      ? (((totalIncomeSum - totalExpenseSum) / totalIncomeSum) * 100).toFixed(2)
+      ? ((totalIncomeSum - totalExpenseSum) / totalIncomeSum) * 100
       : 0;
 
   return {
