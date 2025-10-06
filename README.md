@@ -1,3 +1,4 @@
+![app.png](app.png)
 # Personal Finance Tracker
 
 A lightweight web app for tracking income, expenses, and savings.  
