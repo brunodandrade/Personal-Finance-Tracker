@@ -1,20 +1,25 @@
 {
   "name": "personal-finance-tracker",
   "version": "1.0.0",
-  "description": "",
+  "description": "A personal finance tracker built with Parcel and Chart.js",
   "scripts": {
     "dev": "parcel index.html",
-    "build": "parcel build index.html",
+    "build": "parcel build index.html --public-url ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brunodandrade/Personal-Finance-Tracker.git"
+    "url": "https://github.com/brunodandrade/Personal-Finance-Tracker.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "finance",
+    "tracker",
+    "parcel",
+    "chartjs"
+  ],
+  "author": "Bruno D'Andrade",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/brunodandrade/Personal-Finance-Tracker/issues"
   },
@@ -22,11 +27,10 @@
   "dependencies": {
     "axios": "^1.12.2",
     "chart.js": "^4.5.0",
-    "chartjs": "^0.3.24",
-    "parcel": "^2.16.0",
     "prettier": "^3.6.2"
   },
   "devDependencies": {
-    "buffer": "^6.0.3"
+    "buffer": "^6.0.3",
+    "parcel": "^2.16.0"
   }
 }
