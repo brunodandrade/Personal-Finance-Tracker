@@ -5,18 +5,13 @@
   "scripts": {
     "dev": "parcel index.html",
     "build": "parcel build index.html --public-url ./",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "preview": "serve dist"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/brunodandrade/Personal-Finance-Tracker.git"
   },
-  "keywords": [
-    "finance",
-    "tracker",
-    "parcel",
-    "chartjs"
-  ],
+  "keywords": ["finance", "tracker", "parcel", "chartjs"],
   "author": "Bruno D'Andrade",
   "license": "ISC",
   "type": "module",
@@ -31,6 +26,8 @@
   },
   "devDependencies": {
     "buffer": "^6.0.3",
-    "parcel": "^2.16.0"
+    "parcel": "^2.16.0",
+    "serve": "^14.2.3"
   }
 }
+

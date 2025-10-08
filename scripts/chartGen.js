@@ -1,4 +1,4 @@
-import { Chart } from "chart.js/auto";
+import Chart from "chart.js/auto";
 
 export function generateChart(canvas) {
   const ctx = canvas.getContext("2d");

@@ -1,6 +1,7 @@
 import { transactionsMath } from "./math.js";
 import { transactions, deleteTransaction } from "./transactionPross.js";
-import { Chart } from "chart.js/auto";
+import Chart from "chart.js/auto";
+
 import trashIconUrl from "url:../icons/trash.png";
 
 // 🔹 Cache DOM elements
